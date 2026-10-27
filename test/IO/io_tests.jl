@@ -10,4 +10,5 @@ using LabDessem.IO
     include("test_common.jl")
     include("test_study_config.jl")
     include("readers/test_horizon.jl")
+    include("readers/test_submarket.jl")
 end

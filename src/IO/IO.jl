@@ -30,6 +30,8 @@ include("readers/horizon.jl")
 
 export read_horizon, internal_periods_for_original
 include("readers/submarket.jl")
+
+export read_submarkets
 include("readers/thermal.jl")
 include("readers/hydro.jl")
 include("readers/network.jl")
