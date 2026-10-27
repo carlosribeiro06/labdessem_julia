@@ -7,6 +7,8 @@ export ModelConfig, ModelContainer, IndexSets, build_index_sets, attach_index_se
 export thermal_gen_indices, hydro_gen_indices, hydro_plant_indices
 export renewable_plant_indices, pumping_plant_indices
 export period_thermal_indices, period_hydro_indices, constraint_name
+export create_thermal_variables!, create_hydro_variables!, create_pumping_variables!
+export create_renewable_variables!, create_interchange_variables!, create_system_variables!
 
 @kwdef struct ModelConfig
     thermal_uc_enabled::Bool = true
