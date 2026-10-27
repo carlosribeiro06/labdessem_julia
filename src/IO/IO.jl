@@ -21,6 +21,10 @@ export normalize_max_bound
 # Study configuration
 include("study_config.jl")
 
+export FphaOption, ConstantProductivity, Precomputed, Computed
+export StudyConfig, read_study_config
+export is_fpha_enabled, is_fpha_precomputed
+
 # Readers
 include("readers/horizon.jl")
 include("readers/submarket.jl")

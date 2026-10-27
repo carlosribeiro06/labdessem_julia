@@ -8,4 +8,5 @@ using LabDessem.IO
     end
     
     include("test_common.jl")
+    include("test_study_config.jl")
 end
