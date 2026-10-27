@@ -76,4 +76,6 @@ include("writers/orchestrator.jl")
 # Study orchestration
 include("study.jl")
 
+export read_study_from_path, read_study_from_path_with_options
+
 end
