@@ -48,6 +48,8 @@ include("readers/renewable.jl")
 
 export read_renewable_plants
 include("readers/limits.jl")
+
+export read_interchange_limits, read_residual_costs, read_operational_limits
 include("readers/future_cost.jl")
 include("readers/inflow_history.jl")
 
