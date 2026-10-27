@@ -1,6 +1,5 @@
 using Test
-using LabDessem
 
 @testset "LabDessem.jl" begin
-    # Tests
+    include("Core/core_tests.jl")
 end
