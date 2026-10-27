@@ -1,7 +1,9 @@
 # IO module: readers and writers for DESSEM study data.
 module IO
 
-using ..Core
+# NOTE: Julia's builtin Core conflicts with LabDessem.Core, so we use explicit imports.
+import ..Core as LDCore
+using ..Core: SubmarketId
 using CSV
 using DataFrames
 using JSON3
@@ -9,6 +11,12 @@ using Parquet2
 
 # Common utilities
 include("common.jl")
+
+export read_csv
+export flow_m3s_to_hm3, hm3_to_flow_m3s
+export submarket_id_by_name
+export hours_to_periods
+export normalize_max_bound
 
 # Study configuration
 include("study_config.jl")

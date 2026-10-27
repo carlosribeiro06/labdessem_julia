@@ -6,4 +6,6 @@ using LabDessem.IO
     @testset "Module loads" begin
         @test isdefined(LabDessem, :IO)
     end
+    
+    include("test_common.jl")
 end
