@@ -55,6 +55,8 @@ include("readers/future_cost.jl")
 export read_future_cost_cuts
 include("readers/inflow_history.jl")
 
+export read_inflow_history
+
 # Writers
 include("writers/common.jl")
 include("writers/hydro.jl")

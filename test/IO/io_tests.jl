@@ -18,4 +18,5 @@ using LabDessem.IO
     include("readers/test_renewable.jl")
     include("readers/test_limits.jl")
     include("readers/test_future_cost.jl")
+    include("readers/test_inflow_history.jl")
 end
