@@ -45,6 +45,8 @@ include("readers/pumping.jl")
 
 export read_pumping_plants
 include("readers/renewable.jl")
+
+export read_renewable_plants
 include("readers/limits.jl")
 include("readers/future_cost.jl")
 include("readers/inflow_history.jl")
