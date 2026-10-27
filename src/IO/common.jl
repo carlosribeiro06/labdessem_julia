@@ -37,7 +37,7 @@ function hours_to_periods(hours::Float64, period_duration_hours::Float64)::Int
     ceil(Int, hours / period_duration_hours)
 end
 
-function normalize_max_bound(min_val::Float64, max_val::Float64, field_name::String, asset_name::String)::Float64
+function normalize_max_bound(min_val::Float64, max_val::Float64, field_name::AbstractString, asset_name::AbstractString)::Float64
     max_val >= min_val && return max_val
     abs(max_val - min_val) <= BOUND_TOLERANCE && return min_val
     throw(ArgumentError("$field_name for '$asset_name': max ($max_val) < min ($min_val) beyond tolerance"))
