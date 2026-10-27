@@ -51,6 +51,8 @@ include("readers/limits.jl")
 
 export read_interchange_limits, read_residual_costs, read_operational_limits
 include("readers/future_cost.jl")
+
+export read_future_cost_cuts
 include("readers/inflow_history.jl")
 
 # Writers
