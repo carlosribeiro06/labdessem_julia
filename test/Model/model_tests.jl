@@ -4,4 +4,5 @@ using Test
     include("test_model_container.jl")
     include("test_indexing.jl")
     include("test_variables.jl")
+    include("test_integration.jl")
 end
