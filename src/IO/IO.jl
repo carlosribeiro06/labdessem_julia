@@ -3,7 +3,7 @@ module IO
 
 # NOTE: Julia's builtin Core conflicts with LabDessem.Core, so we use explicit imports.
 import ..Core as LDCore
-using ..Core: SubmarketId, BusId, ThermalPlantId, ThermalUnitId, HydroPlantId, HydroGroupId, HydroUnitId
+using ..Core: SubmarketId, BusId, BranchId, ThermalPlantId, ThermalUnitId, HydroPlantId, HydroGroupId, HydroUnitId
 using CSV
 using DataFrames
 using JSON3
@@ -39,6 +39,8 @@ include("readers/hydro.jl")
 
 export read_hydro_plants
 include("readers/network.jl")
+
+export read_buses, read_branches, build_dummy_buses
 include("readers/pumping.jl")
 include("readers/renewable.jl")
 include("readers/limits.jl")
