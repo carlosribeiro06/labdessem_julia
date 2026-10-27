@@ -59,6 +59,11 @@ export read_inflow_history
 
 # Writers
 include("writers/common.jl")
+
+export write_csv, operational_limit_variable_label
+export original_period_for_internal, original_period_duration_hours
+export average_internal_values, sum_internal_values
+export thermal_residence_times
 include("writers/hydro.jl")
 include("writers/thermal.jl")
 include("writers/pumping.jl")
