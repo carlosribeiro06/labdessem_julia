@@ -27,6 +27,8 @@ export is_fpha_enabled, is_fpha_precomputed
 
 # Readers
 include("readers/horizon.jl")
+
+export read_horizon, internal_periods_for_original
 include("readers/submarket.jl")
 include("readers/thermal.jl")
 include("readers/hydro.jl")
