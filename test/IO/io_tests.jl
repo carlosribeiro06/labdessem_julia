@@ -20,4 +20,5 @@ using LabDessem.IO
     include("readers/test_future_cost.jl")
     include("readers/test_inflow_history.jl")
     include("writers/test_common.jl")
+    include("test_integration.jl")
 end

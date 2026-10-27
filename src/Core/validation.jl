@@ -234,28 +234,28 @@ function validate!(system::System)
     end
 
     thermal_plant_ids = Set{ThermalPlantId}()
-    thermal_unit_ids = Set{ThermalUnitId}()
     for plant in system.thermal_plants
         plant.id in thermal_plant_ids && throw(ArgumentError("duplicate ThermalPlant ID: $(plant.id)"))
         push!(thermal_plant_ids, plant.id)
+        unit_ids_in_plant = Set{ThermalUnitId}()
         for unit in plant.units
-            unit.id in thermal_unit_ids && throw(ArgumentError("duplicate ThermalUnit ID: $(unit.id) across plants"))
-            push!(thermal_unit_ids, unit.id)
+            unit.id in unit_ids_in_plant && throw(ArgumentError("duplicate ThermalUnit ID: $(unit.id) within plant $(plant.id)"))
+            push!(unit_ids_in_plant, unit.id)
         end
     end
 
     hydro_plant_ids = Set{HydroPlantId}()
-    hydro_group_ids = Set{HydroGroupId}()
-    hydro_unit_ids = Set{HydroUnitId}()
     for plant in system.hydro_plants
         plant.id in hydro_plant_ids && throw(ArgumentError("duplicate HydroPlant ID: $(plant.id)"))
         push!(hydro_plant_ids, plant.id)
+        group_ids_in_plant = Set{HydroGroupId}()
         for group in plant.groups
-            group.id in hydro_group_ids && throw(ArgumentError("duplicate HydroGroup ID: $(group.id) across plants"))
-            push!(hydro_group_ids, group.id)
+            group.id in group_ids_in_plant && throw(ArgumentError("duplicate HydroGroup ID: $(group.id) within plant $(plant.id)"))
+            push!(group_ids_in_plant, group.id)
+            unit_ids_in_group = Set{HydroUnitId}()
             for unit in group.units
-                unit.id in hydro_unit_ids && throw(ArgumentError("duplicate HydroUnit ID: $(unit.id) across groups"))
-                push!(hydro_unit_ids, unit.id)
+                unit.id in unit_ids_in_group && throw(ArgumentError("duplicate HydroUnit ID: $(unit.id) within group $(group.id)"))
+                push!(unit_ids_in_group, unit.id)
             end
         end
     end
