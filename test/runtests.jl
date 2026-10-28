@@ -5,4 +5,5 @@ using Test
     include("IO/io_tests.jl")
     include("Model/model_tests.jl")
     include("Network/network_tests.jl")
+    include("FPHA/fpha_tests.jl")
 end
