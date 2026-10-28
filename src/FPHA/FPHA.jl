@@ -18,11 +18,13 @@ export FphaPlantConfig, FphaFitDeviation, FphaPlantResult
 export WARN_RELATIVE_THRESHOLD
 export VhaRow, ForebayTable
 export GridParams
+export Hyperplane3d, EPS_NZ
 export ProductionFunction, K_GRAVITY
 export evaluate, validate, interpolate, v_min, v_max, hydro_name
 export tailrace_level, net_head, evaluate_capped
 export build_grid, resolve_fitting_bounds
 export exceeds_warn_threshold
+export convex_hull_3d, extract_upper_envelope, convex_hull_upper_envelope
 
 export FPHAFittingError
 export InsufficientPointsError, DuplicateVolumeError, DegenerateCloudError
