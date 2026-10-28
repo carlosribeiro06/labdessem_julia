@@ -349,3 +349,85 @@ end
         @test length(reduced) <= length(planes)
     end
 end
+
+@testset "Deviation Computation" begin
+    @testset "compute_fit_deviation with empty planes" begin
+        pf = make_storage_pf()
+        bounds = make_storage_bounds()
+        dev = compute_fit_deviation(RawPlane[], pf, bounds)
+        @test dev.mean_abs_mw == 0.0
+        @test dev.relative == 0.0
+    end
+
+    @testset "compute_fit_deviation with fitted planes" begin
+        pf = make_storage_pf()
+        bounds = make_storage_bounds()
+        planes = fit_hull_planes(pf, bounds)
+        alpha = compute_alpha_fpha(planes, pf, bounds)
+        scaled = scale_planes(planes, alpha)
+        dev = compute_fit_deviation(scaled, pf, bounds)
+        @test dev.mean_abs_mw >= 0.0
+        @test dev.max_abs_mw >= dev.mean_abs_mw
+        @test dev.rms_mw >= 0.0
+        @test dev.relative >= 0.0
+        @test dev.relative < 1.0
+    end
+
+    @testset "exceeds_warn_threshold" begin
+        good = FphaFitDeviation(
+            mean_abs_mw=10.0, max_abs_mw=20.0, rms_mw=15.0,
+            mean_signed_mw=5.0, relative=0.02
+        )
+        @test !exceeds_warn_threshold(good)
+
+        bad = FphaFitDeviation(
+            mean_abs_mw=100.0, max_abs_mw=200.0, rms_mw=150.0,
+            mean_signed_mw=50.0, relative=0.10
+        )
+        @test exceeds_warn_threshold(bad)
+    end
+end
+
+@testset "Plane Validation" begin
+    @testset "Valid planes pass" begin
+        planes = [
+            RawPlane(gamma_0=100.0, gamma_v=0.001, gamma_q=0.5, gamma_s=-0.01),
+            RawPlane(gamma_0=50.0, gamma_v=0.0, gamma_q=0.3, gamma_s=0.0),
+        ]
+        @test validate_fitted_planes(planes, 0.95, "ValidHydro") === nothing
+    end
+
+    @testset "Empty planes throws error" begin
+        @test_throws NoHyperplanesError validate_fitted_planes(RawPlane[], 1.0, "Empty")
+    end
+
+    @testset "Zero alpha throws error" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=0.001, gamma_q=0.5, gamma_s=0.0)]
+        @test_throws NonPositiveAlphaError validate_fitted_planes(planes, 0.0, "ZeroAlpha")
+    end
+
+    @testset "Negative alpha throws error" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=0.001, gamma_q=0.5, gamma_s=0.0)]
+        @test_throws NonPositiveAlphaError validate_fitted_planes(planes, -0.5, "NegAlpha")
+    end
+
+    @testset "Negative gamma_v throws error" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=-0.001, gamma_q=0.5, gamma_s=0.0)]
+        @test_throws InvalidCoefficientError validate_fitted_planes(planes, 1.0, "NegGammaV")
+    end
+
+    @testset "Negative gamma_q throws error" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=0.001, gamma_q=-0.001, gamma_s=0.0)]
+        @test_throws InvalidCoefficientError validate_fitted_planes(planes, 1.0, "NegGammaQ")
+    end
+
+    @testset "Positive gamma_s throws error" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=0.001, gamma_q=0.5, gamma_s=0.001)]
+        @test_throws InvalidCoefficientError validate_fitted_planes(planes, 1.0, "PosGammaS")
+    end
+
+    @testset "Within tolerance passes" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=-1e-11, gamma_q=-1e-11, gamma_s=1e-11)]
+        @test validate_fitted_planes(planes, 1.0, "Tolerance") === nothing
+    end
+end

@@ -237,3 +237,81 @@ function reduce_planes(
         planes
     end
 end
+
+function compute_fit_deviation(
+    planes::Vector{RawPlane}, pf::ProductionFunction, bounds::FittingBounds
+)::FphaFitDeviation
+    if isempty(planes)
+        return FphaFitDeviation(
+            mean_abs_mw=0.0, max_abs_mw=0.0, rms_mw=0.0,
+            mean_signed_mw=0.0, relative=0.0
+        )
+    end
+
+    grid = build_grid(bounds, pf.max_turbined_m3s)
+
+    sum_abs = 0.0
+    sum_signed = 0.0
+    sum_sq = 0.0
+    max_abs = 0.0
+    peak_fph = 0.0
+    count = 0
+
+    for v in grid.v_points
+        for q in grid.q_points
+            fitted = envelope_min(planes, v, q)
+            exact = evaluate_capped(pf, v, q, 0.0)
+            signed = fitted - exact
+            abs_val = abs(signed)
+            sum_abs += abs_val
+            sum_signed += signed
+            sum_sq += signed^2
+            max_abs = max(max_abs, abs_val)
+            peak_fph = max(peak_fph, exact)
+            count += 1
+        end
+    end
+
+    n = Float64(max(count, 1))
+    mean_abs_mw = sum_abs / n
+    rms_mw = sqrt(sum_sq / n)
+    relative = peak_fph > 0.0 ? mean_abs_mw / peak_fph : 0.0
+
+    FphaFitDeviation(
+        mean_abs_mw=mean_abs_mw,
+        max_abs_mw=max_abs,
+        rms_mw=rms_mw,
+        mean_signed_mw=sum_signed / n,
+        relative=relative
+    )
+end
+
+const SIGN_TOLERANCE = 1e-10
+
+function validate_fitted_planes(
+    planes::Vector{RawPlane}, alpha::Float64, hydro_name::String
+)
+    isempty(planes) && throw(NoHyperplanesError(hydro_name))
+    alpha <= 0.0 && throw(NonPositiveAlphaError(hydro_name, alpha))
+
+    for (idx, plane) in enumerate(planes)
+        if plane.gamma_v < -SIGN_TOLERANCE
+            throw(InvalidCoefficientError(
+                hydro_name, :gamma_v, plane.gamma_v,
+                ">= 0 (more storage should increase production)"
+            ))
+        end
+        if plane.gamma_q < -SIGN_TOLERANCE
+            throw(InvalidCoefficientError(
+                hydro_name, :gamma_q, plane.gamma_q,
+                ">= 0 (turbined flow should produce power)"
+            ))
+        end
+        if plane.gamma_s > SIGN_TOLERANCE
+            throw(InvalidCoefficientError(
+                hydro_name, :gamma_s, plane.gamma_s,
+                "<= 0 (spillage should not increase production)"
+            ))
+        end
+    end
+end
