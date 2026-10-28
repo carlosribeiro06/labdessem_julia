@@ -126,3 +126,126 @@ end
         @test @inferred(evaluate(plane, 50.0, 200.0, 10.0)) isa Float64
     end
 end
+
+@testset "PlaneReductionConfig" begin
+    @testset "AngleReduction" begin
+        ar = AngleReduction()
+        @test ar.tolerance_deg == 1.0
+        ar2 = AngleReduction(tolerance_deg=2.5)
+        @test ar2.tolerance_deg == 2.5
+    end
+
+    @testset "DistanceReduction" begin
+        dr = DistanceReduction()
+        @test dr.tolerance_pct == 0.5
+        @test dr.n_samples == 64
+        dr2 = DistanceReduction(tolerance_pct=1.0, n_samples=100)
+        @test dr2.tolerance_pct == 1.0
+        @test dr2.n_samples == 100
+    end
+
+    @testset "Subtype relationship" begin
+        @test AngleReduction() isa PlaneReductionConfig
+        @test DistanceReduction() isa PlaneReductionConfig
+    end
+end
+
+@testset "FphaPlantConfig" begin
+    function make_test_forebay()
+        rows = [VhaRow(volume_hm3=0.0, height_m=400.0, area_km2=10.0)]
+        ForebayTable(rows, "TEST")
+    end
+
+    @testset "Construction with required fields" begin
+        forebay = make_test_forebay()
+        config = FphaPlantConfig(
+            codigo=1,
+            nome="TESTE",
+            forebay=forebay,
+            max_turbined_m3s=500.0,
+            max_generation_mw=200.0,
+            long_term_mean_inflow_m3s=300.0
+        )
+        @test config.codigo == 1
+        @test config.nome == "TESTE"
+        @test config.tailrace === nothing
+        @test config.hydraulic_loss_m === nothing
+        @test config.efficiency === nothing
+    end
+
+    @testset "Construction with all fields" begin
+        forebay = make_test_forebay()
+        tailrace = ConstantTailrace(level_m=350.0)
+        bounds = FittingBounds(v_min=0.0, v_max=100.0)
+        config = FphaPlantConfig(
+            codigo=1,
+            nome="TESTE",
+            forebay=forebay,
+            tailrace=tailrace,
+            hydraulic_loss_m=5.0,
+            efficiency=0.9,
+            max_turbined_m3s=500.0,
+            max_generation_mw=200.0,
+            long_term_mean_inflow_m3s=300.0,
+            config_bounds=bounds,
+            reduction_config=DistanceReduction(tolerance_pct=1.0, n_samples=32)
+        )
+        @test config.tailrace isa ConstantTailrace
+        @test config.hydraulic_loss_m == 5.0
+        @test config.efficiency == 0.9
+        @test config.reduction_config isa DistanceReduction
+    end
+end
+
+@testset "FphaFitDeviation" begin
+    @testset "Construction with defaults" begin
+        dev = FphaFitDeviation()
+        @test dev.mean_abs_mw == 0.0
+        @test dev.max_abs_mw == 0.0
+        @test dev.rms_mw == 0.0
+        @test dev.mean_signed_mw == 0.0
+        @test dev.relative == 0.0
+    end
+
+    @testset "Construction with values" begin
+        dev = FphaFitDeviation(
+            mean_abs_mw=1.5,
+            max_abs_mw=3.0,
+            rms_mw=2.0,
+            mean_signed_mw=-0.5,
+            relative=0.03
+        )
+        @test dev.mean_abs_mw == 1.5
+        @test dev.max_abs_mw == 3.0
+        @test dev.relative == 0.03
+    end
+
+    @testset "exceeds_warn_threshold" begin
+        dev_ok = FphaFitDeviation(relative=0.04)
+        @test exceeds_warn_threshold(dev_ok) == false
+
+        dev_warn = FphaFitDeviation(relative=0.06)
+        @test exceeds_warn_threshold(dev_warn) == true
+
+        dev_boundary = FphaFitDeviation(relative=0.05)
+        @test exceeds_warn_threshold(dev_boundary) == false
+    end
+end
+
+@testset "FphaPlantResult" begin
+    @testset "Construction with valid planes" begin
+        planes = [RawPlane(gamma_0=100.0, gamma_v=0.5, gamma_q=0.1, gamma_s=-0.05)]
+        dev = FphaFitDeviation()
+        result = FphaPlantResult(1, "TESTE", planes, 1.02, dev)
+        @test result.codigo == 1
+        @test result.nome == "TESTE"
+        @test length(result.planes) == 1
+        @test result.alpha == 1.02
+    end
+
+    @testset "Rejects empty planes" begin
+        planes = RawPlane[]
+        dev = FphaFitDeviation()
+        @test_throws NoHyperplanesError FphaPlantResult(1, "TESTE", planes, 1.0, dev)
+    end
+end
