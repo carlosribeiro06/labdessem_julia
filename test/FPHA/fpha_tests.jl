@@ -4,4 +4,6 @@
     include("test_geometry.jl")
     include("test_production.jl")
     include("test_grid.jl")
+    include("test_hull.jl")
+include("test_fitting.jl")
 end

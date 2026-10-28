@@ -154,7 +154,7 @@ end
 
     @testset "extract_upper_envelope from Hyperplane3d" begin
         hyperplanes = [
-            Hyperplane3d((0.0, 0.0, 1.0), -1.0),
+            Hyperplane3d((0.0, 0.0, 1.0), 1.0),
             Hyperplane3d((0.0, 0.0, -1.0), 0.0),
             Hyperplane3d((1.0, 0.0, 0.0), -1.0),
         ]

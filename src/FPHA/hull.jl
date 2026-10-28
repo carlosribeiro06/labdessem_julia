@@ -51,7 +51,7 @@ function extract_upper_envelope(planes::Vector{Hyperplane3d})::Vector{RawPlane}
         nz = p.normal[3]
         nz > EPS_NZ || continue
         push!(result, RawPlane(
-            gamma_0=-p.offset / nz,
+            gamma_0=p.offset / nz,
             gamma_v=-p.normal[1] / nz,
             gamma_q=-p.normal[2] / nz,
             gamma_s=0.0
