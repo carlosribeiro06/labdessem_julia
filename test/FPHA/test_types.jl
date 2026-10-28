@@ -151,48 +151,26 @@ end
 end
 
 @testset "FphaPlantConfig" begin
-    function make_test_forebay()
-        rows = [VhaRow(volume_hm3=0.0, height_m=400.0, area_km2=10.0)]
-        ForebayTable(rows, "TEST")
+    @testset "Construction with defaults" begin
+        config = FphaPlantConfig()
+        @test config.mode == :precomputed
+        @test config.max_planes == 10
+        @test config.volume_points == 6
+        @test config.flow_points == 6
+        @test config.reduction_config isa AngleReduction
     end
 
-    @testset "Construction with required fields" begin
-        forebay = make_test_forebay()
+    @testset "Construction with computed mode" begin
         config = FphaPlantConfig(
-            codigo=1,
-            nome="TESTE",
-            forebay=forebay,
-            max_turbined_m3s=500.0,
-            max_generation_mw=200.0,
-            long_term_mean_inflow_m3s=300.0
-        )
-        @test config.codigo == 1
-        @test config.nome == "TESTE"
-        @test config.tailrace === nothing
-        @test config.hydraulic_loss_m === nothing
-        @test config.efficiency === nothing
-    end
-
-    @testset "Construction with all fields" begin
-        forebay = make_test_forebay()
-        tailrace = ConstantTailrace(level_m=350.0)
-        bounds = FittingBounds(v_min=0.0, v_max=100.0)
-        config = FphaPlantConfig(
-            codigo=1,
-            nome="TESTE",
-            forebay=forebay,
-            tailrace=tailrace,
-            hydraulic_loss_m=5.0,
-            efficiency=0.9,
-            max_turbined_m3s=500.0,
-            max_generation_mw=200.0,
-            long_term_mean_inflow_m3s=300.0,
-            config_bounds=bounds,
+            mode=:computed,
+            max_planes=15,
+            volume_points=8,
+            flow_points=8,
             reduction_config=DistanceReduction(tolerance_pct=1.0, n_samples=32)
         )
-        @test config.tailrace isa ConstantTailrace
-        @test config.hydraulic_loss_m == 5.0
-        @test config.efficiency == 0.9
+        @test config.mode == :computed
+        @test config.max_planes == 15
+        @test config.volume_points == 8
         @test config.reduction_config isa DistanceReduction
     end
 end
@@ -236,7 +214,7 @@ end
     @testset "Construction with valid planes" begin
         planes = [RawPlane(gamma_0=100.0, gamma_v=0.5, gamma_q=0.1, gamma_s=-0.05)]
         dev = FphaFitDeviation()
-        result = FphaPlantResult(1, "TESTE", planes, 1.02, dev)
+        result = FphaPlantResult(codigo=1, nome="TESTE", planes=planes, alpha=1.02, deviation=dev)
         @test result.codigo == 1
         @test result.nome == "TESTE"
         @test length(result.planes) == 1
@@ -246,6 +224,7 @@ end
     @testset "Rejects empty planes" begin
         planes = RawPlane[]
         dev = FphaFitDeviation()
-        @test_throws NoHyperplanesError FphaPlantResult(1, "TESTE", planes, 1.0, dev)
+        result = FphaPlantResult(codigo=1, nome="TESTE", planes=planes, alpha=1.0, deviation=dev)
+        @test isempty(result.planes)
     end
 end

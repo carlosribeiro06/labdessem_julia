@@ -6,4 +6,5 @@
     include("test_grid.jl")
     include("test_hull.jl")
 include("test_fitting.jl")
+include("test_pipeline.jl")
 end

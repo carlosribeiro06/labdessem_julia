@@ -32,6 +32,7 @@ export resolve_s_max, fit_gamma_s_for_planes!
 export ORIGIN_EPS, is_origin_plane, angle_deg, mean_plane
 export reduce_planes_angle, reduce_planes
 export SIGN_TOLERANCE, compute_fit_deviation, validate_fitted_planes
+export calculate_max_swallowing, FitPlantParams, fit_plant, fit_plants
 
 export FPHAFittingError
 export InsufficientPointsError, DuplicateVolumeError, DegenerateCloudError
