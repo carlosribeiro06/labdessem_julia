@@ -3,7 +3,7 @@ using JuMP
 using HiGHS
 using LabDessem
 using LabDessem.Model
-import LabDessem.Core as LDCore
+import LabDessem.Domain
 
 function make_test_system_vars(;
     num_periods=4,
@@ -15,7 +15,7 @@ function make_test_system_vars(;
     interchange_limits=nothing,
     future_cost_enabled=false
 )
-    horizon = LDCore.StudyHorizon(
+    horizon = Domain.StudyHorizon(
         periods=num_periods,
         period_duration_hours=0.5,
         original_periods=num_periods,
@@ -24,37 +24,37 @@ function make_test_system_vars(;
         internal_subperiod_index=ones(Int, num_periods)
     )
     
-    thermal_plants = something(thermal_plants, LDCore.ThermalPlant[])
-    hydro_plants = something(hydro_plants, LDCore.HydroPlant[])
-    renewable_plants = something(renewable_plants, LDCore.RenewablePlant[])
-    pumping_plants = something(pumping_plants, LDCore.PumpingPlant[])
-    submarkets = something(submarkets, LDCore.Submarket[])
-    interchange_limits = something(interchange_limits, LDCore.InterchangeLimit[])
+    thermal_plants = something(thermal_plants, Domain.ThermalPlant[])
+    hydro_plants = something(hydro_plants, Domain.HydroPlant[])
+    renewable_plants = something(renewable_plants, Domain.RenewablePlant[])
+    pumping_plants = something(pumping_plants, Domain.PumpingPlant[])
+    submarkets = something(submarkets, Domain.Submarket[])
+    interchange_limits = something(interchange_limits, Domain.InterchangeLimit[])
     
-    return LDCore.System(
+    return Domain.System(
         horizon=horizon,
         thermal_unit_commitment_enabled=true,
         hydro_unit_commitment_enabled=false,
         ton_residual_enabled=false,
         fpha_enabled=false,
         future_cost_enabled=future_cost_enabled,
-        residual_costs=LDCore.ResidualCost[],
-        future_cost_cuts=LDCore.FutureCostCut[],
+        residual_costs=Domain.ResidualCost[],
+        future_cost_cuts=Domain.FutureCostCut[],
         submarkets=submarkets,
         interchange_limits=interchange_limits,
-        operational_limits=LDCore.OperationalLimit[],
-        buses=LDCore.Bus[],
-        branches=LDCore.Branch[],
+        operational_limits=Domain.OperationalLimit[],
+        buses=Domain.Bus[],
+        branches=Domain.Branch[],
         thermal_plants=thermal_plants,
         hydro_plants=hydro_plants,
         pumping_plants=pumping_plants,
         renewable_plants=renewable_plants,
-        inflow_history=LDCore.InflowHistoryRow[]
+        inflow_history=Domain.InflowHistoryRow[]
     )
 end
 
 function make_thermal_unit_vars(id; pmin=10.0, pmax=100.0)
-    LDCore.ThermalUnit(
+    Domain.ThermalUnit(
         id=id,
         name="Unit$id",
         min_generation_mw=pmin,
@@ -66,7 +66,7 @@ function make_thermal_unit_vars(id; pmin=10.0, pmax=100.0)
         startup_cost=0.0,
         shutdown_cost=0.0,
         variable_cost_per_mwh=50.0,
-        initial_condition=LDCore.ThermalInitialCondition(
+        initial_condition=Domain.ThermalInitialCondition(
             is_on=true, generation_mw=50.0, time_in_state=10,
             time_in_ramp=0, is_ramping_up=false, is_ramping_down=false
         )
@@ -74,7 +74,7 @@ function make_thermal_unit_vars(id; pmin=10.0, pmax=100.0)
 end
 
 function make_thermal_plant_vars(id, num_units; pmax=100.0)
-    LDCore.ThermalPlant(
+    Domain.ThermalPlant(
         id=id,
         name="ThermalPlant$id",
         submarket_id=1,
@@ -84,19 +84,19 @@ function make_thermal_plant_vars(id, num_units; pmax=100.0)
 end
 
 function make_hydro_unit_vars(id; pmax=100.0, qmax=10.0)
-    LDCore.HydroUnit(
+    Domain.HydroUnit(
         id=id,
         name="HydroUnit$id",
         min_generation_mw=0.0,
         max_generation_mw=pmax,
         max_turbining_hm3=qmax,
         effective_head_m=50.0,
-        initial_condition=LDCore.HydroInitialCondition(is_on=true, generation_mw=50.0, time_in_state=10)
+        initial_condition=Domain.HydroInitialCondition(is_on=true, generation_mw=50.0, time_in_state=10)
     )
 end
 
 function make_hydro_group_vars(id, num_units)
-    LDCore.HydroGroup(
+    Domain.HydroGroup(
         id=id,
         name="Group$id",
         units=[make_hydro_unit_vars(u) for u in 1:num_units]
@@ -104,7 +104,7 @@ function make_hydro_group_vars(id, num_units)
 end
 
 function make_hydro_plant_vars(id, groups_config; vmin=10.0, vmax=100.0, num_periods=4, diversion=false)
-    LDCore.HydroPlant(
+    Domain.HydroPlant(
         id=id,
         name="HydroPlant$id",
         submarket_id=1,
@@ -113,7 +113,7 @@ function make_hydro_plant_vars(id, groups_config; vmin=10.0, vmax=100.0, num_per
         downstream_plant_id=nothing,
         diversion_upstream_plant_ids=Int[],
         diversion_plant_id=diversion ? 99 : nothing,
-        reservoir=LDCore.Reservoir(min_volume_hm3=vmin, max_volume_hm3=vmax, initial_volume_hm3=50.0),
+        reservoir=Domain.Reservoir(min_volume_hm3=vmin, max_volume_hm3=vmax, initial_volume_hm3=50.0),
         natural_inflow_hm3=fill(10.0, num_periods),
         water_withdrawal_hm3=fill(0.0, num_periods),
         spillage_cost_per_hm3=0.1,
@@ -121,9 +121,9 @@ function make_hydro_plant_vars(id, groups_config; vmin=10.0, vmax=100.0, num_per
         specific_productivity_mw_per_m3s=0.1,
         hydraulic_loss_m=nothing,
         efficiency=nothing,
-        fpha_segments=LDCore.HydroFphaSegment[],
+        fpha_segments=Domain.HydroFphaSegment[],
         groups=[make_hydro_group_vars(g, n) for (g, n) in groups_config],
-        turbine_type=LDCore.Francis,
+        turbine_type=Domain.Francis,
         volume_level_table=nothing,
         tailrace_coefficients=nothing
     )
@@ -223,7 +223,7 @@ end
     end
     
     @testset "create_renewable_variables!" begin
-        plants = [LDCore.RenewablePlant(
+        plants = [Domain.RenewablePlant(
             id=1, name="Solar1", submarket_id=1, bus_id=1,
             available_generation_mw=[50.0, 60.0, 70.0, 80.0]
         )]
@@ -242,7 +242,7 @@ end
     
     @testset "create_interchange_variables!" begin
         limits = [
-            LDCore.InterchangeLimit(from_submarket_id=1, to_submarket_id=2, max_flow_mw=500.0, penalty_cost_per_mwh=0.0)
+            Domain.InterchangeLimit(from_submarket_id=1, to_submarket_id=2, max_flow_mw=500.0, penalty_cost_per_mwh=0.0)
         ]
         system = make_test_system_vars(num_periods=4, interchange_limits=limits)
         
@@ -258,7 +258,7 @@ end
     end
     
     @testset "create_system_variables! with future cost enabled" begin
-        submarkets = [LDCore.Submarket(id=1, name="SE", demand_mw=fill(1000.0, 4))]
+        submarkets = [Domain.Submarket(id=1, name="SE", demand_mw=fill(1000.0, 4))]
         system = make_test_system_vars(num_periods=4, submarkets=submarkets, future_cost_enabled=true)
         
         container = ModelContainer()
@@ -273,7 +273,7 @@ end
     end
     
     @testset "create_system_variables! without future cost" begin
-        submarkets = [LDCore.Submarket(id=1, name="SE", demand_mw=fill(1000.0, 4))]
+        submarkets = [Domain.Submarket(id=1, name="SE", demand_mw=fill(1000.0, 4))]
         system = make_test_system_vars(num_periods=4, submarkets=submarkets, future_cost_enabled=false)
         
         container = ModelContainer()

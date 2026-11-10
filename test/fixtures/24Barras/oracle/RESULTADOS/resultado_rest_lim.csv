@@ -1,0 +1,13 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+TipoUsina: tipo da usina associada ao limite
+CodigoUsina: codigo da usina associada ao limite
+NomeUsina: nome da usina associada ao limite
+Variavel: variavel limitada
+Periodo: periodo de aplicacao do limite
+Linf: limite inferior informado
+Lsup: limite superior informado
+
+TipoUsina;CodigoUsina;NomeUsina;Variavel;Periodo;Linf;Lsup

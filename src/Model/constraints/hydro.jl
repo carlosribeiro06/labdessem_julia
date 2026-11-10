@@ -1,6 +1,6 @@
-import ..Core as LDCore
+using ..Domain
 
-function add_hydraulic_balance_constraints!(container, system::LDCore.System)
+function add_hydraulic_balance_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     sets = container.index_sets
@@ -78,7 +78,7 @@ function add_hydraulic_balance_constraints!(container, system::LDCore.System)
     return nothing
 end
 
-function add_initial_volume_constraints!(container, system::LDCore.System)
+function add_initial_volume_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     model = container.model
@@ -93,7 +93,7 @@ function add_initial_volume_constraints!(container, system::LDCore.System)
     return nothing
 end
 
-function add_fpha_constraints!(container, system::LDCore.System)
+function add_fpha_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     !system.fpha_enabled && return nothing
@@ -137,7 +137,7 @@ function add_fpha_constraints!(container, system::LDCore.System)
     return nothing
 end
 
-function add_productivity_constraints!(container, system::LDCore.System)
+function add_productivity_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     system.fpha_enabled && return nothing

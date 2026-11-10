@@ -9,7 +9,7 @@ function dot(left::AbstractVector{Float64}, right::AbstractVector{Float64})::Flo
 end
 
 function compute_line_flows(
-    system::LDCore.System,
+    system::Domain.System,
     model::DcNetworkModel,
     injections::Matrix{Float64}
 )::Vector{LineFlowResult}
@@ -36,7 +36,7 @@ function compute_line_flows(
     return results
 end
 
-function bus_name(system::LDCore.System, bus_id::BusId)::String
+function bus_name(system::Domain.System, bus_id::BusId)::String
     for bus in system.buses
         bus.id == bus_id && return bus.name
     end
@@ -44,7 +44,7 @@ function bus_name(system::LDCore.System, bus_id::BusId)::String
 end
 
 function detect_flow_violations(
-    system::LDCore.System,
+    system::Domain.System,
     model::DcNetworkModel,
     injections::Matrix{Float64}
 )::Vector{FlowViolation}
@@ -66,7 +66,7 @@ function detect_flow_violations(
     return violations
 end
 
-function all_flow_constraints(system::LDCore.System)::Set{FlowCutKey}
+function all_flow_constraints(system::Domain.System)::Set{FlowCutKey}
     keys = Set{FlowCutKey}()
     n_branches_count = length(system.branches)
     n_periods = system.horizon.periods
@@ -80,7 +80,7 @@ function all_flow_constraints(system::LDCore.System)::Set{FlowCutKey}
 end
 
 function constant_load_shift(
-    system::LDCore.System,
+    system::Domain.System,
     model::DcNetworkModel,
     branch_idx::Int,
     period::Int

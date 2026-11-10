@@ -1,4 +1,4 @@
-import ..Core as LDCore
+using ..Domain
 
 struct IndexSets
     periods::Vector{Int}
@@ -11,7 +11,7 @@ struct IndexSets
     submarket_periods::Vector{Tuple{Int,Int}}
 end
 
-function build_index_sets(system::LDCore.System)::IndexSets
+function build_index_sets(system::Domain.System)::IndexSets
     num_periods = system.horizon.periods
     num_periods < 1 && throw(ArgumentError("periods must be >= 1"))
     

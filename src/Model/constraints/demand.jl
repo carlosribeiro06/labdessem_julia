@@ -1,6 +1,6 @@
-import ..Core as LDCore
+using ..Domain
 
-function add_demand_balance_constraints!(container, system::LDCore.System)
+function add_demand_balance_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     sets = container.index_sets

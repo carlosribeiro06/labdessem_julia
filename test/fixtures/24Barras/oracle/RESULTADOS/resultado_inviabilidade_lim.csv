@@ -1,0 +1,15 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+Estagio: estagio do processo iterativo
+Iteracao: numero da iteracao
+Periodo: periodo original
+CodigoUsina: codigo da usina
+NomeUsina: nome da usina
+Variavel: variavel do limite operativo
+Unidade: unidade de medida da variavel
+ViolacaoInf: violacao do limite inferior
+ViolacaoSup: violacao do limite superior
+
+Estagio;Iteracao;Periodo;CodigoUsina;NomeUsina;Variavel;Unidade;ViolacaoInf;ViolacaoSup

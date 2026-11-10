@@ -8,11 +8,11 @@ and marginal cost (CMB/CMO) extraction.
 module Network
 
 using LinearAlgebra
-import ..Core as LDCore
-using ..Core: BusId, BranchId, SubmarketId, System, Bus, Branch
-using ..Core: StudyHorizon, Submarket, ThermalPlant, HydroPlant
-using ..Core: PumpingPlant, RenewablePlant, InterchangeLimit
-using ..Core: ResidualCost, FutureCostCut, OperationalLimit, InflowHistoryRow
+using ..Domain
+using ..Domain: BusId, BranchId, SubmarketId, System, Bus, Branch
+using ..Domain: StudyHorizon, Submarket, ThermalPlant, HydroPlant
+using ..Domain: PumpingPlant, RenewablePlant, InterchangeLimit
+using ..Domain: ResidualCost, FutureCostCut, OperationalLimit, InflowHistoryRow
 
 include("errors.jl")
 include("types.jl")

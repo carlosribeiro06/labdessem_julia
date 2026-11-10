@@ -1,6 +1,6 @@
-import ..Core as LDCore
+using ..Domain
 
-function create_thermal_variables!(container, system::LDCore.System)
+function create_thermal_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     sets = container.index_sets
@@ -40,7 +40,7 @@ function create_thermal_variables!(container, system::LDCore.System)
     return nothing
 end
 
-function create_hydro_variables!(container, system::LDCore.System)
+function create_hydro_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     sets = container.index_sets
@@ -96,7 +96,7 @@ function create_hydro_variables!(container, system::LDCore.System)
     return nothing
 end
 
-function create_pumping_variables!(container, system::LDCore.System)
+function create_pumping_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     sets = container.index_sets
@@ -118,7 +118,7 @@ function create_pumping_variables!(container, system::LDCore.System)
     return nothing
 end
 
-function create_renewable_variables!(container, system::LDCore.System)
+function create_renewable_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     sets = container.index_sets
@@ -140,7 +140,7 @@ function create_renewable_variables!(container, system::LDCore.System)
     return nothing
 end
 
-function create_interchange_variables!(container, system::LDCore.System)
+function create_interchange_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     sets = container.index_sets
@@ -164,7 +164,7 @@ function create_interchange_variables!(container, system::LDCore.System)
     return nothing
 end
 
-function create_system_variables!(container, system::LDCore.System)
+function create_system_variables!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached. Call build_index_sets first.")
     
     model = container.model

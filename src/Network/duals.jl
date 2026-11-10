@@ -20,7 +20,7 @@ function extract_flow_duals(
 end
 
 function compute_cmb_per_bus(
-    system::LDCore.System,
+    system::Domain.System,
     model::DcNetworkModel,
     demand_duals::Dict{Tuple{SubmarketId, Int}, Float64},
     flow_duals::Dict{Tuple{Int, Int}, Float64},
@@ -66,9 +66,9 @@ end
 
 function compute_cmo_from_cmb(
     cmb_records::Vector{CmbRecord},
-    system::LDCore.System
+    system::Domain.System
 )::Dict{Tuple{SubmarketId, Int}, Float64}
-    bus_map = Dict{BusId, LDCore.Bus}(b.id => b for b in system.buses)
+    bus_map = Dict{BusId, Domain.Bus}(b.id => b for b in system.buses)
 
     grouped = Dict{Tuple{SubmarketId, Int}, Vector{CmbRecord}}()
     for record in cmb_records

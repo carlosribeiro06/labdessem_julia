@@ -1,20 +1,22 @@
 # Main module
 module LabDessem
 
-include("Core/Core.jl")
-include("IO/IO.jl")
+include("Domain/Domain.jl")
+include("FPHA/FPHA.jl")
+include("Network/Network.jl")
+include("Input/Input.jl")
 include("Model/Model.jl")
 include("Simulation/Simulation.jl")
-include("Network/Network.jl")
-include("FPHA/FPHA.jl")
+include("Output/Output.jl")
 
-using .Core
-using .IO
+using .Domain
+using .FPHA
+using .Network
+using .Input
 using .Model
 using .Simulation
-using .Network
-using .FPHA
+using .Output
 
-export Core, IO, Model, Simulation, Network, FPHA
+export Domain, FPHA, Network, Input, Model, Simulation, Output
 
 end

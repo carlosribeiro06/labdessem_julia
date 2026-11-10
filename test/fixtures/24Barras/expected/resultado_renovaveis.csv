@@ -1,0 +1,12 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+Periodo: periodo do horizonte de estudo
+Codigo: codigo da usina renovavel
+Nome: nome da usina renovavel
+Submercado: submercado da usina renovavel
+GerProg: geracao programada maxima media no periodo em MW
+GeracaoMW: geracao renovavel em MW
+
+Periodo;Codigo;Nome;Submercado;GerProg;GeracaoMW

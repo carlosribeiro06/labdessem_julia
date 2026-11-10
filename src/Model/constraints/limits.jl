@@ -1,6 +1,6 @@
-import ..Core as LDCore
+using ..Domain
 
-function add_operational_limits_constraints!(container, system::LDCore.System)
+function add_operational_limits_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     model = container.model
@@ -29,8 +29,8 @@ function add_operational_limits_constraints!(container, system::LDCore.System)
     return nothing
 end
 
-function get_limit_variable(model, target::LDCore.ThermalPlantTarget, variable::LDCore.OperationalLimitVariable, t::Int)
-    variable == LDCore.Generation || return nothing
+function get_limit_variable(model, target::Domain.ThermalPlantTarget, variable::Domain.OperationalLimitVariable, t::Int)
+    variable == Domain.Generation || return nothing
     haskey(model, :thermal_gen) || return nothing
     
     thermal_gen = model[:thermal_gen]
@@ -46,18 +46,18 @@ function get_limit_variable(model, target::LDCore.ThermalPlantTarget, variable::
     return total_gen
 end
 
-function get_limit_variable(model, target::LDCore.ThermalUnitTarget, variable::LDCore.OperationalLimitVariable, t::Int)
-    variable == LDCore.Generation || return nothing
+function get_limit_variable(model, target::Domain.ThermalUnitTarget, variable::Domain.OperationalLimitVariable, t::Int)
+    variable == Domain.Generation || return nothing
     haskey(model, :thermal_gen) || return nothing
     
     thermal_gen = model[:thermal_gen]
     return get(thermal_gen, (target.plant_id, target.unit_id, t), nothing)
 end
 
-function get_limit_variable(model, target::LDCore.HydroPlantTarget, variable::LDCore.OperationalLimitVariable, t::Int)
+function get_limit_variable(model, target::Domain.HydroPlantTarget, variable::Domain.OperationalLimitVariable, t::Int)
     plant_id = target.id
     
-    if variable == LDCore.Generation
+    if variable == Domain.Generation
         haskey(model, :hydro_gen) || return nothing
         hydro_gen = model[:hydro_gen]
         total_gen = AffExpr(0.0)
@@ -68,15 +68,15 @@ function get_limit_variable(model, target::LDCore.HydroPlantTarget, variable::LD
         end
         return total_gen
         
-    elseif variable == LDCore.Spillage
+    elseif variable == Domain.Spillage
         haskey(model, :hydro_spill) || return nothing
         return get(model[:hydro_spill], (plant_id, t), nothing)
         
-    elseif variable == LDCore.Volume
+    elseif variable == Domain.Volume
         haskey(model, :hydro_volume) || return nothing
         return get(model[:hydro_volume], (plant_id, t), nothing)
         
-    elseif variable == LDCore.Defluence
+    elseif variable == Domain.Defluence
         haskey(model, :hydro_turb) || return nothing
         haskey(model, :hydro_spill) || return nothing
         hydro_turb = model[:hydro_turb]
@@ -91,7 +91,7 @@ function get_limit_variable(model, target::LDCore.HydroPlantTarget, variable::LD
         total_turb = total_turb + get(hydro_spill, (plant_id, t), 0.0)
         return total_turb
         
-    elseif variable == LDCore.Turbining
+    elseif variable == Domain.Turbining
         haskey(model, :hydro_turb) || return nothing
         hydro_turb = model[:hydro_turb]
         total_turb = AffExpr(0.0)
@@ -102,7 +102,7 @@ function get_limit_variable(model, target::LDCore.HydroPlantTarget, variable::LD
         end
         return total_turb
         
-    elseif variable == LDCore.Diversion
+    elseif variable == Domain.Diversion
         haskey(model, :hydro_diversion) || return nothing
         return get(model[:hydro_diversion], (plant_id, t), nothing)
     end
@@ -110,12 +110,12 @@ function get_limit_variable(model, target::LDCore.HydroPlantTarget, variable::LD
     return nothing
 end
 
-function get_limit_variable(model, target::LDCore.HydroUnitTarget, variable::LDCore.OperationalLimitVariable, t::Int)
+function get_limit_variable(model, target::Domain.HydroUnitTarget, variable::Domain.OperationalLimitVariable, t::Int)
     return nothing
 end
 
-function get_limit_variable(model, target::LDCore.PumpingPlantTarget, variable::LDCore.OperationalLimitVariable, t::Int)
-    variable == LDCore.Pumping || return nothing
+function get_limit_variable(model, target::Domain.PumpingPlantTarget, variable::Domain.OperationalLimitVariable, t::Int)
+    variable == Domain.Pumping || return nothing
     haskey(model, :pumping) || return nothing
     return get(model[:pumping], (target.id, t), nothing)
 end

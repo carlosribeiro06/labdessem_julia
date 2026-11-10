@@ -1,0 +1,17 @@
+name = "24Barras"
+description = """
+Base case: 24-bus network, single MILP solve followed by the LP-CALC-CMO price pass, with network constraints on. \
+Every variant fixture is this case with a few input files replaced.\
+"""
+
+[[assert]]
+kind = "exit_code"
+value = 0
+
+[[assert]]
+kind = "stage_sequence"
+value = ["MILP#1 OPTIMAL", "LP-CALC-CMO#1 OPTIMAL"]
+
+[[assert]]
+kind = "files_exact"
+value = ["resultado_cmobar.csv", "resultado_cmosist.csv", "resultado_elevatorias.csv", "resultado_fcf_eco.csv", "resultado_hidreletricas.csv", "resultado_inviabilidade_lim.csv", "resultado_inviabilidade_rede.csv", "resultado_linhas_adicionadas.csv", "resultado_processo_iter.csv", "resultado_rede.csv", "resultado_renovaveis.csv", "resultado_rest_lim.csv", "resultado_termicas.csv"]

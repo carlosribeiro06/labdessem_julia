@@ -1,0 +1,45 @@
+
+  ⚡ LABDESSEM v0.8.0
+     Hydrothermal dispatch optimization
+
+Execution
+  Case:      <CASE_DIR>
+  Solver:    HiGHS
+  Mode:      MILP unico
+  Flags:     UCT, FPHA=constant_productivity, FCF, EngMax, rede
+
+Reading input data...
+Lendo arquivo: OPER_DURACAO.csv
+Lendo arquivo: CAD_SBM.csv
+Lendo arquivo: OPER_SBM.csv
+Lendo arquivo: OPER_CARGA_BARRA.csv
+Lendo arquivo: OPER_LINHA.csv
+Lendo arquivo: OPER_LIMITE_INTERCAMBIO.csv
+Lendo arquivo: CAD_UNID_UTE.csv
+Lendo arquivo: CAD_RAMPAS_TERMICAS.csv
+Lendo arquivo: CAD_UHE.csv
+Lendo arquivo: CAD_CONJ_UHE.csv
+Lendo arquivo: OPER_VAZAO.csv
+Lendo arquivo: CAD_GEOMETRIA_UHE.csv
+Lendo arquivo: CAD_TAILRACE.csv
+Lendo arquivo: CAD_USIE.csv
+Lendo arquivo: CAD_REN.csv
+Lendo arquivo: OPER_REN.csv
+Lendo arquivo: OPER_REST_LIM.csv
+Loaded: 2 submarkets, 3 thermal plants, 4 hydro plants
+Solving...
+Resolvendo MILP #01...
+MILP #01 concluido | objective = 4497639.8364 | flow violations = 0 | solve time = <t> s
+Resolvendo LP-CALC-CMO #01...
+LP-CALC-CMO #01 concluido | objective = 4497639.8364 | flow violations = 0 | solve time = <t> s
+Writing output files...
+
+Process
+  MILP #01 | obj = 4497639.8364 | violations = 0 | time = <t>s
+  LP-CALC-CMO #01 | obj = 4497639.8364 | violations = 0 | time = <t>s
+
+Summary
+  Objective:   4497639.8364
+  Flow cuts:   1632
+  Violations:  0
+  Output:      <CASE_DIR>/RESULTADOS

@@ -3,12 +3,12 @@ using JuMP
 using HiGHS
 using LabDessem
 using LabDessem.Model
-import LabDessem.Core as LDCore
+import LabDessem.Domain
 
 function make_integration_system()
     num_periods = 4
     
-    horizon = LDCore.StudyHorizon(
+    horizon = Domain.StudyHorizon(
         periods=num_periods,
         period_duration_hours=0.5,
         original_periods=num_periods,
@@ -17,7 +17,7 @@ function make_integration_system()
         internal_subperiod_index=ones(Int, num_periods)
     )
     
-    thermal_unit = LDCore.ThermalUnit(
+    thermal_unit = Domain.ThermalUnit(
         id=1,
         name="Unit1",
         min_generation_mw=10.0,
@@ -29,62 +29,62 @@ function make_integration_system()
         startup_cost=1000.0,
         shutdown_cost=500.0,
         variable_cost_per_mwh=50.0,
-        initial_condition=LDCore.ThermalInitialCondition(
+        initial_condition=Domain.ThermalInitialCondition(
             is_on=true, generation_mw=50.0, time_in_state=10,
             time_in_ramp=0, is_ramping_up=false, is_ramping_down=false
         )
     )
     
-    thermal_plant = LDCore.ThermalPlant(
+    thermal_plant = Domain.ThermalPlant(
         id=1, name="Thermal1", submarket_id=1, bus_id=1, units=[thermal_unit]
     )
     
-    hydro_unit = LDCore.HydroUnit(
+    hydro_unit = Domain.HydroUnit(
         id=1, name="HydroUnit1",
         min_generation_mw=0.0, max_generation_mw=100.0,
         max_turbining_hm3=10.0, effective_head_m=50.0,
-        initial_condition=LDCore.HydroInitialCondition(is_on=true, generation_mw=50.0, time_in_state=10)
+        initial_condition=Domain.HydroInitialCondition(is_on=true, generation_mw=50.0, time_in_state=10)
     )
     
-    hydro_group = LDCore.HydroGroup(id=1, name="Group1", units=[hydro_unit])
+    hydro_group = Domain.HydroGroup(id=1, name="Group1", units=[hydro_unit])
     
-    hydro_plant = LDCore.HydroPlant(
+    hydro_plant = Domain.HydroPlant(
         id=1, name="Hydro1", submarket_id=1, bus_id=1,
         upstream_plant_ids=Int[], downstream_plant_id=nothing,
         diversion_upstream_plant_ids=Int[], diversion_plant_id=nothing,
-        reservoir=LDCore.Reservoir(min_volume_hm3=10.0, max_volume_hm3=100.0, initial_volume_hm3=50.0),
+        reservoir=Domain.Reservoir(min_volume_hm3=10.0, max_volume_hm3=100.0, initial_volume_hm3=50.0),
         natural_inflow_hm3=fill(5.0, num_periods),
         water_withdrawal_hm3=fill(0.0, num_periods),
         spillage_cost_per_hm3=0.1, turbining_cost_per_hm3=0.01,
         specific_productivity_mw_per_m3s=10.0,
         hydraulic_loss_m=nothing, efficiency=nothing,
-        fpha_segments=LDCore.HydroFphaSegment[],
+        fpha_segments=Domain.HydroFphaSegment[],
         groups=[hydro_group],
-        turbine_type=LDCore.Francis,
+        turbine_type=Domain.Francis,
         volume_level_table=nothing, tailrace_coefficients=nothing
     )
     
-    submarket = LDCore.Submarket(id=1, name="SE", demand_mw=fill(80.0, num_periods))
+    submarket = Domain.Submarket(id=1, name="SE", demand_mw=fill(80.0, num_periods))
     
-    return LDCore.System(
+    return Domain.System(
         horizon=horizon,
         thermal_unit_commitment_enabled=true,
         hydro_unit_commitment_enabled=false,
         ton_residual_enabled=false,
         fpha_enabled=false,
         future_cost_enabled=false,
-        residual_costs=LDCore.ResidualCost[],
-        future_cost_cuts=LDCore.FutureCostCut[],
+        residual_costs=Domain.ResidualCost[],
+        future_cost_cuts=Domain.FutureCostCut[],
         submarkets=[submarket],
-        interchange_limits=LDCore.InterchangeLimit[],
-        operational_limits=LDCore.OperationalLimit[],
-        buses=LDCore.Bus[],
-        branches=LDCore.Branch[],
+        interchange_limits=Domain.InterchangeLimit[],
+        operational_limits=Domain.OperationalLimit[],
+        buses=Domain.Bus[],
+        branches=Domain.Branch[],
         thermal_plants=[thermal_plant],
         hydro_plants=[hydro_plant],
-        pumping_plants=LDCore.PumpingPlant[],
-        renewable_plants=LDCore.RenewablePlant[],
-        inflow_history=LDCore.InflowHistoryRow[]
+        pumping_plants=Domain.PumpingPlant[],
+        renewable_plants=Domain.RenewablePlant[],
+        inflow_history=Domain.InflowHistoryRow[]
     )
 end
 

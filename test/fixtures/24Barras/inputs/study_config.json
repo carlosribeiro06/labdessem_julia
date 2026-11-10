@@ -1,0 +1,11 @@
+{
+  "$schema": "../../schemas/study_config.schema.json",
+  "opcao_execucao": 2,
+  "rede": 1,
+  "UCT": 1,
+  "UCH": 0,
+  "TON_Residual": 0,
+  "FPHA": "constant_productivity",
+  "FCF": 1,
+  "EngMax": 1
+}

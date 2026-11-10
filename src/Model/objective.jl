@@ -1,8 +1,8 @@
-import ..Core as LDCore
+using ..Domain
 
 const DEFICIT_COST_PER_MWH = 5000.0
 
-function set_objective!(container, system::LDCore.System)
+function set_objective!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     model = container.model
@@ -100,7 +100,7 @@ function set_objective!(container, system::LDCore.System)
     return nothing
 end
 
-function add_fcf_cuts!(container, system::LDCore.System)
+function add_fcf_cuts!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     !system.future_cost_enabled && return nothing
@@ -137,7 +137,7 @@ function add_fcf_cuts!(container, system::LDCore.System)
     return nothing
 end
 
-function add_fcf_cut!(container, cut::LDCore.FutureCostCut, system::LDCore.System)
+function add_fcf_cut!(container, cut::Domain.FutureCostCut, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     !haskey(container.model, :future_cost) && return nothing
     

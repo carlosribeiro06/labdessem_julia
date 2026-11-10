@@ -1,0 +1,15 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+Etapa: etapa do processo iterativo
+Iteracao: numero da iteracao dentro da etapa
+NumeroRestricoes: quantidade de restricoes do problema resolvido
+NumeroVariaveis: quantidade de variaveis do problema resolvido
+ValorFuncaoObjetivo: valor da funcao objetivo em R$
+StatusSolucao: status retornado para a solucao
+TempoResolucaoSeg: tempo de resolucao em segundos
+
+Etapa;Iteracao;NumeroRestricoes;NumeroVariaveis;ValorFuncaoObjetivo;StatusSolucao;TempoResolucaoSeg
+MILP;1;7366;2885;4497639.836362;OPTIMAL;1.009003
+LP-CALC-CMO;1;7366;2885;4497639.836362;OPTIMAL;0.329696

@@ -1,6 +1,6 @@
-import ..Core as LDCore
+using ..Domain
 
-function add_thermal_uc_transition_constraints!(container, system::LDCore.System)
+function add_thermal_uc_transition_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     !container.config.thermal_uc_enabled && return nothing
@@ -43,7 +43,7 @@ function add_thermal_uc_transition_constraints!(container, system::LDCore.System
     return nothing
 end
 
-function add_thermal_generation_bounds_constraints!(container, system::LDCore.System)
+function add_thermal_generation_bounds_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     sets = container.index_sets
@@ -75,7 +75,7 @@ function add_thermal_generation_bounds_constraints!(container, system::LDCore.Sy
     return nothing
 end
 
-function add_min_updown_constraints!(container, system::LDCore.System)
+function add_min_updown_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     !container.config.thermal_uc_enabled && return nothing
@@ -111,7 +111,7 @@ function add_min_updown_constraints!(container, system::LDCore.System)
     return nothing
 end
 
-function add_startup_trajectory_constraints!(container, system::LDCore.System)
+function add_startup_trajectory_constraints!(container, system::Domain.System)
     isnothing(container.index_sets) && error("Index sets not attached")
     
     !container.config.thermal_uc_enabled && return nothing

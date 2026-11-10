@@ -1,0 +1,1 @@
+- [Oracle semantics @61c20f1](project_oracle_semantics_61c20f1.md) — verified good_lp dual signs, CMB lower-row bug, untracked goldens, Q23 variant recipe failures

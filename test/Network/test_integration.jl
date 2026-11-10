@@ -1,25 +1,25 @@
 using Test
-import LabDessem.Core as LDCore
-using LabDessem.Core: BusId, BranchId, SubmarketId
+import LabDessem.Domain
+using LabDessem.Domain: BusId, BranchId, SubmarketId
 using LabDessem.Network
 
 function build_3bus_network()
     buses = [
-        LDCore.Bus(
+        Domain.Bus(
             id=BusId(1),
             name="Bus1",
             submarket_id=SubmarketId(1),
             angle_reference=true,
             demand_mw=[0.0]
         ),
-        LDCore.Bus(
+        Domain.Bus(
             id=BusId(2),
             name="Bus2",
             submarket_id=SubmarketId(1),
             angle_reference=false,
             demand_mw=[100.0]
         ),
-        LDCore.Bus(
+        Domain.Bus(
             id=BusId(3),
             name="Bus3",
             submarket_id=SubmarketId(2),
@@ -29,7 +29,7 @@ function build_3bus_network()
     ]
 
     branches = [
-        LDCore.Branch(
+        Domain.Branch(
             id=BranchId(1),
             name="L1-2",
             from_bus_id=BusId(1),
@@ -37,7 +37,7 @@ function build_3bus_network()
             reactance_pu=0.1,
             thermal_limit_mw=80.0
         ),
-        LDCore.Branch(
+        Domain.Branch(
             id=BranchId(2),
             name="L1-3",
             from_bus_id=BusId(1),
@@ -45,7 +45,7 @@ function build_3bus_network()
             reactance_pu=0.2,
             thermal_limit_mw=120.0
         ),
-        LDCore.Branch(
+        Domain.Branch(
             id=BranchId(3),
             name="L2-3",
             from_bus_id=BusId(2),
@@ -55,7 +55,7 @@ function build_3bus_network()
         )
     ]
 
-    horizon = LDCore.StudyHorizon(
+    horizon = Domain.StudyHorizon(
         periods=2,
         period_duration_hours=1.0,
         original_periods=2,
@@ -64,25 +64,25 @@ function build_3bus_network()
         internal_subperiod_index=[1, 1]
     )
 
-    LDCore.System(
+    Domain.System(
         horizon=horizon,
         thermal_unit_commitment_enabled=false,
         hydro_unit_commitment_enabled=false,
         ton_residual_enabled=false,
         fpha_enabled=false,
         future_cost_enabled=false,
-        residual_costs=LDCore.ResidualCost[],
-        future_cost_cuts=LDCore.FutureCostCut[],
-        submarkets=LDCore.Submarket[],
-        interchange_limits=LDCore.InterchangeLimit[],
-        operational_limits=LDCore.OperationalLimit[],
+        residual_costs=Domain.ResidualCost[],
+        future_cost_cuts=Domain.FutureCostCut[],
+        submarkets=Domain.Submarket[],
+        interchange_limits=Domain.InterchangeLimit[],
+        operational_limits=Domain.OperationalLimit[],
         buses=buses,
         branches=branches,
-        thermal_plants=LDCore.ThermalPlant[],
-        hydro_plants=LDCore.HydroPlant[],
-        pumping_plants=LDCore.PumpingPlant[],
-        renewable_plants=LDCore.RenewablePlant[],
-        inflow_history=LDCore.InflowHistoryRow[]
+        thermal_plants=Domain.ThermalPlant[],
+        hydro_plants=Domain.HydroPlant[],
+        pumping_plants=Domain.PumpingPlant[],
+        renewable_plants=Domain.RenewablePlant[],
+        inflow_history=Domain.InflowHistoryRow[]
     )
 end
 

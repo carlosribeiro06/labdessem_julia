@@ -1,0 +1,14 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+Periodo: periodo do horizonte de estudo
+Codigo: codigo da usina elevatoria
+Nome: nome da usina elevatoria
+Submercado: submercado onde a elevatoria consome energia
+QbombMin: vazao bombeada minima em m3/s
+QbombMax: vazao bombeada maxima em m3/s
+Qbomb: vazao bombeada media no periodo em m3/s
+Consumo: potencia consumida no bombeamento em MW
+
+Periodo;Codigo;Nome;Submercado;QbombMin;QbombMax;Qbomb;Consumo

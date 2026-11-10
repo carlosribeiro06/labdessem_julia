@@ -1,5 +1,5 @@
 using Test
-using LabDessem.Core
+using LabDessem.Domain
 using LabDessem.Network
 
 @testset "Network Types" begin

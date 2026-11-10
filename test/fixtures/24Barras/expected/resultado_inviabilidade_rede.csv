@@ -1,0 +1,11 @@
+ONS - Operador Nacional do Sistema Eletrico
+LabDessem
+
+Descricao das colunas:
+Estagio: estagio do processo iterativo
+Iteracao: numero da iteracao
+Periodo: periodo original
+Ramo: identificador do ramo violado
+Violacao_MW: magnitude da violacao em MW
+
+Estagio;Iteracao;Periodo;Ramo;Violacao_MW

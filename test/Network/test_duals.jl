@@ -1,59 +1,6 @@
 using Test
-import LabDessem.Core as LDCore
-using LabDessem.Core: BusId, BranchId, SubmarketId
+using LabDessem.Domain: BusId, SubmarketId
 using LabDessem.Network
-
-function make_test_bus(id::Int; is_ref::Bool=false, submarket::Int=1, demand::Float64=100.0)
-    LDCore.Bus(
-        id=BusId(id),
-        name="Bus$id",
-        submarket_id=SubmarketId(submarket),
-        angle_reference=is_ref,
-        demand_mw=[demand]
-    )
-end
-
-function make_test_branch(id::Int, from::Int, to::Int; x::Float64=0.1, limit::Float64=100.0)
-    LDCore.Branch(
-        id=BranchId(id),
-        name="L$id",
-        from_bus_id=BusId(from),
-        to_bus_id=BusId(to),
-        reactance_pu=x,
-        thermal_limit_mw=limit
-    )
-end
-
-function make_minimal_system(buses::Vector{LDCore.Bus}, branches::Vector{LDCore.Branch})
-    horizon = LDCore.StudyHorizon(
-        periods=1,
-        period_duration_hours=1.0,
-        original_periods=1,
-        original_period_durations_hours=[1.0],
-        internal_to_original_period=[1],
-        internal_subperiod_index=[1]
-    )
-    LDCore.System(
-        horizon=horizon,
-        thermal_unit_commitment_enabled=false,
-        hydro_unit_commitment_enabled=false,
-        ton_residual_enabled=false,
-        fpha_enabled=false,
-        future_cost_enabled=false,
-        residual_costs=LDCore.ResidualCost[],
-        future_cost_cuts=LDCore.FutureCostCut[],
-        submarkets=LDCore.Submarket[],
-        interchange_limits=LDCore.InterchangeLimit[],
-        operational_limits=LDCore.OperationalLimit[],
-        buses=buses,
-        branches=branches,
-        thermal_plants=LDCore.ThermalPlant[],
-        hydro_plants=LDCore.HydroPlant[],
-        pumping_plants=LDCore.PumpingPlant[],
-        renewable_plants=LDCore.RenewablePlant[],
-        inflow_history=LDCore.InflowHistoryRow[]
-    )
-end
 
 @testset "Duals" begin
     @testset "extract_flow_duals single" begin
@@ -94,7 +41,7 @@ end
             make_test_bus(2, submarket=1, demand=50.0)
         ]
         branches = [make_test_branch(1, 1, 2)]
-        system = make_minimal_system(buses, branches)
+        system = make_network_system(buses, branches)
         model = DcNetworkModel(system)
 
         demand_duals = Dict((SubmarketId(1), 1) => 100.0)
@@ -119,7 +66,7 @@ end
             make_test_branch(1, 1, 2),
             make_test_branch(2, 2, 3)
         ]
-        system = make_minimal_system(buses, branches)
+        system = make_network_system(buses, branches)
 
         cmb_records = [
             CmbRecord(bus_id=BusId(2), period=1, cmb=50.0, submarket_id=SubmarketId(1)),
@@ -139,7 +86,7 @@ end
             make_test_bus(2, submarket=1, demand=0.0)
         ]
         branches = [make_test_branch(1, 1, 2)]
-        system = make_minimal_system(buses, branches)
+        system = make_network_system(buses, branches)
 
         cmb_records = [
             CmbRecord(bus_id=BusId(2), period=1, cmb=50.0, submarket_id=SubmarketId(1))
